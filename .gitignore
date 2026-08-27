@@ -46,3 +46,11 @@ weights/
 # Logs
 logs/
 *.log
+
+# Runtime/generated data
+*.db
+*.db-shm
+*.db-wal
+audit_ledger_*.jsonl
+evidence_cache/
+
