@@ -221,4 +221,6 @@ async def websocket_edge_ingest_endpoint(
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    port = int(os.getenv("PORT", os.getenv("GATEWAY_PORT", "8000")))
+    reload = os.getenv("IBVAP_ENV", "production").lower() != "production"
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=reload)

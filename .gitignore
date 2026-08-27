@@ -27,8 +27,8 @@ Thumbs.db
 
 # Environment & Credentials
 .env
-.env.local
-.env.*.local
+.env.*
+!.env.example
 *.pem
 *.key
 *.crt
@@ -51,6 +51,9 @@ logs/
 *.db
 *.db-shm
 *.db-wal
+*.sqlite
+*.sqlite3
 audit_ledger_*.jsonl
+audit_ledger_certin.jsonl
 evidence_cache/
 
