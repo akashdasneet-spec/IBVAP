@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: ibvap-central-gateway
+    runtime: docker
+    dockerfilePath: ./deploy/docker/Dockerfile.gateway
+    plan: free
+    region: oregon
+    healthCheckPath: /health/liveness
+    envVars:
+      - key: IBVAP_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ibvap-postgres
+          property: connectionString
+      - key: EDGE_API_TOKEN
+        generateValue: true
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://ibvap-three.vercel.app,https://ibvap.vercel.app
+      - key: TAK_SERVER_URL
+        value: udp://239.2.3.1:6969
+      - key: IPFS_API_URL
+        value: http://127.0.0.1:5001/api/v0
+
+databases:
+  - name: ibvap-postgres
+    databaseName: ibvap_tactical_db
+    user: ibvap_admin
+    plan: free
+    region: oregon
+    postgresMajorVersion: 16

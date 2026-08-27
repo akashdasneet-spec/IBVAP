@@ -17,6 +17,12 @@ from db.models import Base
 DEFAULT_DB_URL = "sqlite+aiosqlite:///./ibvap_gateway.db"
 DATABASE_URL = os.getenv("DATABASE_URL", DEFAULT_DB_URL)
 
+# Normalize PostgreSQL URL for asyncpg if standard scheme is passed
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+asyncpg://", 1)
+elif DATABASE_URL.startswith("postgresql://") and not DATABASE_URL.startswith("postgresql+asyncpg://"):
+    DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://", 1)
+
 # Fallback from postgres to sqlite if asyncpg driver is not available locally
 if DATABASE_URL.startswith("postgresql") and not os.getenv("FORCE_POSTGRES"):
     try:
