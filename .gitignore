@@ -57,3 +57,5 @@ audit_ledger_*.jsonl
 audit_ledger_certin.jsonl
 evidence_cache/
 
+# Vercel & Deploy
+.vercel/
