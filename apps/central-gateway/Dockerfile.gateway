@@ -27,6 +27,7 @@ RUN pip install --no-cache-dir -e .
 
 WORKDIR /workspace/apps/central-gateway
 RUN pip install --no-cache-dir -e .
+ENV PYTHONPATH="/workspace/apps/central-gateway:/workspace/apps/central-gateway/src"
 
 EXPOSE 8000
 

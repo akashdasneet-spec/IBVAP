@@ -13,15 +13,22 @@ from typing import Optional
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 
-# Path bootstrap for packages/core-types
+# Safe path bootstrap for packages and submodules
 _current_file = Path(__file__).resolve()
-_repo_root = _current_file.parents[3]
-_core_types_src = _repo_root / "packages" / "core-types" / "src"
 _gateway_src = _current_file.parent
 
-for p in [str(_core_types_src), str(_gateway_src)]:
-    if p not in sys.path:
-        sys.path.insert(0, p)
+if str(_gateway_src) not in sys.path:
+    sys.path.insert(0, str(_gateway_src))
+
+# Safe fallback for core-types if not installed in environment
+try:
+    import ibvap_core_types
+except ImportError:
+    for _parent in _current_file.parents:
+        _candidate = _parent / "packages" / "core-types" / "src"
+        if _candidate.is_dir():
+            sys.path.insert(0, str(_candidate))
+            break
 
 from api.routes import router as api_router
 from api.ws_hub import WebSocketEventHub
