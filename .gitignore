@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+venv/
+ENV/
+
+# Build outputs
+dist/
+build/
+*.egg-info/
+.next/
+out/
+.turbo/
+
+# IDE & OS
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Environment & Credentials
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+*.crt
+
+# Local Data / Database / IPFS storage
+data/
+ipfs_staging/
+ipfs_data/
+postgres_data/
+weights/
+*.engine
+*.onnx
+*.pt
+
+# Logs
+logs/
+*.log

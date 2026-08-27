@@ -1,0 +1,26 @@
+# Multi-Stage Build for IBVAP Central Gateway C2
+FROM python:3.11-slim as builder
+
+WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends build-essential libpq-dev && rm -rf /var/lib/apt/lists/*
+
+COPY packages/core-types /app/packages/core-types
+COPY apps/central-gateway /app/apps/central-gateway
+
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir /app/packages/core-types && \
+    pip install --no-cache-dir /app/apps/central-gateway
+
+FROM python:3.11-slim as runner
+WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends libpq5 curl && rm -rf /var/lib/apt/lists/*
+
+COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
+COPY apps/central-gateway/src /app/src
+
+EXPOSE 8000
+HEALTHCHECK --interval=10s --timeout=5s --retries=3 \
+  CMD curl -f http://localhost:8000/health/liveness || exit 1
+
+CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]

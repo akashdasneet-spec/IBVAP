@@ -1,0 +1,44 @@
+# Multi-Stage Production Dockerfile for IBVAP Edge Engine with TensorRT & GStreamer
+FROM nvcr.io/nvidia/tensorrt:24.03-py3 as base
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    NVIDIA_VISIBLE_DEVICES=all \
+    NVIDIA_DRIVER_CAPABILITIES=compute,utility,video
+
+# Install GStreamer plugins, FFmpeg, and build essentials
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gstreamer1.0-tools \
+    gstreamer1.0-plugins-base \
+    gstreamer1.0-plugins-good \
+    gstreamer1.0-plugins-bad \
+    gstreamer1.0-plugins-ugly \
+    gstreamer1.0-libav \
+    libgstreamer1.0-dev \
+    libgstreamer-plugins-base1.0-dev \
+    libgl1 \
+    libglib2.0-0 \
+    curl \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /workspace
+
+# Install uv for rapid Python dependency resolution
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+ENV PATH="/root/.cargo/bin:${PATH}"
+
+# Copy Core Types and App
+COPY packages/core-types /workspace/packages/core-types
+COPY apps/edge-engine /workspace/apps/edge-engine
+
+WORKDIR /workspace/packages/core-types
+RUN pip install --no-cache-dir -e .
+
+WORKDIR /workspace/apps/edge-engine
+RUN pip install --no-cache-dir -e .
+
+EXPOSE 8001
+
+CMD ["python", "src/main.py"]

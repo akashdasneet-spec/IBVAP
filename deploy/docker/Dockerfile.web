@@ -1,0 +1,39 @@
+# Multi-stage Next.js Dockerfile for Web Tactical Dashboard
+FROM node:20-alpine AS base
+RUN npm install -g pnpm
+
+FROM base AS dependencies
+WORKDIR /app
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/web-dashboard/package.json ./apps/web-dashboard/
+COPY packages/core-types/package.json ./packages/core-types/
+RUN pnpm install --frozen-lockfile
+
+FROM base AS builder
+WORKDIR /app
+COPY . .
+COPY --from=dependencies /app/node_modules ./node_modules
+COPY --from=dependencies /app/apps/web-dashboard/node_modules ./apps/web-dashboard/node_modules
+
+ARG NEXT_PUBLIC_GATEWAY_URL
+ARG NEXT_PUBLIC_WS_URL
+
+ENV NEXT_PUBLIC_GATEWAY_URL=${NEXT_PUBLIC_GATEWAY_URL}
+ENV NEXT_PUBLIC_WS_URL=${NEXT_PUBLIC_WS_URL}
+
+RUN test -n "$NEXT_PUBLIC_GATEWAY_URL" || (echo "NEXT_PUBLIC_GATEWAY_URL must not be empty" && exit 1)
+RUN test -n "$NEXT_PUBLIC_WS_URL" || (echo "NEXT_PUBLIC_WS_URL must not be empty" && exit 1)
+
+RUN pnpm --filter @ibvap/web-dashboard build
+
+FROM node:20-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+ENV PORT=3000
+
+COPY --from=builder /app/apps/web-dashboard/.next/standalone ./
+COPY --from=builder /app/apps/web-dashboard/.next/static ./apps/web-dashboard/.next/static
+COPY --from=builder /app/apps/web-dashboard/public ./apps/web-dashboard/public
+
+EXPOSE 3000
+CMD ["node", "apps/web-dashboard/server.js"]

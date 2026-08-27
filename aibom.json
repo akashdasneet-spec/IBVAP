@@ -1,0 +1,40 @@
+{
+  "$schema": "https://raw.githubusercontent.com/ai-bom/spec/main/schema.json",
+  "name": "IBVAP-AI-BOM",
+  "version": "1.0.0",
+  "models": [
+    {
+      "name": "YOLOv11-BorderDefense",
+      "architecture": "YOLOv11-CSPDarknet",
+      "task": "Object Detection & Tracking",
+      "classes": ["Person", "Vehicle", "Weapon", "Abandoned Package"],
+      "format": "ONNX / TensorRT FP16",
+      "sha256_hash": "REDACTED_HISTORICAL_KEY_OR_HASH",
+      "license": "Proprietary Defense License",
+      "benchmark": {
+        "latency_ms_tensorrt": 4.2,
+        "input_resolution": [640, 640]
+      }
+    },
+    {
+      "name": "Zero-DCE++ Low-Light Enhancer",
+      "architecture": "Deep Curve Estimation ++",
+      "task": "Illumination Enhancement",
+      "format": "PyTorch / 256-level LUT Accelerated",
+      "sha256_hash": "a4f89d3000b1a03975ef7c9802cf67e012903fe51fa98bc54c0e6db61491cf65",
+      "benchmark": {
+        "latency_ms": 2.7,
+        "dynamic_bypass_threshold": 0.45
+      }
+    },
+    {
+      "name": "ArcFace-512D ResNet100",
+      "architecture": "ResNet-100-ArcFace",
+      "task": "Facial Feature Embedding",
+      "embedding_dimensions": 512,
+      "format": "ONNX / Float32",
+      "sha256_hash": "8f481c4e7ea6c9d09c2a8f886f32cf05d594b292e463a8a3a0e1c15f91d57e84",
+      "metric": "Cosine Similarity"
+    }
+  ]
+}

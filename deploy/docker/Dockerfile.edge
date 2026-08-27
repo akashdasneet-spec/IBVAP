@@ -1,0 +1,19 @@
+# Standalone Container for IBVAP Edge AI Engine
+FROM python:3.11-slim
+
+WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libgl1 \
+    libglib2.0-0 \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY packages/core-types /app/packages/core-types
+COPY apps/edge-engine /app/apps/edge-engine
+
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir /app/packages/core-types && \
+    pip install --no-cache-dir /app/apps/edge-engine
+
+WORKDIR /app/apps/edge-engine
+CMD ["python", "src/main.py"]

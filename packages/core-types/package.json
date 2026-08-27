@@ -1,0 +1,14 @@
+{
+  "name": "@ibvap/core-types",
+  "version": "1.0.0",
+  "main": "./src/typescript/index.ts",
+  "types": "./src/typescript/index.ts",
+  "scripts": {
+    "build": "tsc --emitDeclarationOnly",
+    "lint": "eslint src/typescript"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.5.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-08-27T18:50:00Z",
+    "component": {
+      "name": "ibvap-platform",
+      "version": "1.0.0",
+      "type": "application",
+      "description": "Intelligent Border Video Analytics Platform (IBVAP)"
+    }
+  },
+  "components": [
+    {
+      "name": "fastapi",
+      "version": "0.115.0",
+      "purl": "pkg:pypi/fastapi@0.115.0",
+      "licenses": [{"license": {"id": "MIT"}}]
+    },
+    {
+      "name": "sqlalchemy",
+      "version": "2.0.35",
+      "purl": "pkg:pypi/sqlalchemy@2.0.35",
+      "licenses": [{"license": {"id": "MIT"}}]
+    },
+    {
+      "name": "cryptography",
+      "version": "43.0.1",
+      "purl": "pkg:pypi/cryptography@43.0.1",
+      "licenses": [{"license": {"id": "Apache-2.0"}}]
+    },
+    {
+      "name": "maplibre-gl",
+      "version": "4.7.1",
+      "purl": "pkg:npm/maplibre-gl@4.7.1",
+      "licenses": [{"license": {"id": "BSD-3-Clause"}}]
+    },
+    {
+      "name": "next",
+      "version": "14.2.3",
+      "purl": "pkg:npm/next@14.2.3",
+      "licenses": [{"license": {"id": "MIT"}}]
+    },
+    {
+      "name": "pydantic",
+      "version": "2.9.2",
+      "purl": "pkg:pypi/pydantic@2.9.2",
+      "licenses": [{"license": {"id": "MIT"}}]
+    }
+  ]
+}

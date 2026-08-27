@@ -1,0 +1,78 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: ibvap-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-ibvap_tactical_db}
+      POSTGRES_USER: ${POSTGRES_USER:-ibvap_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ibvap_secure_defense_pass_2024}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5432:5432"
+    networks:
+      - ibvap-tactical-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-ibvap_admin} -d ${POSTGRES_DB:-ibvap_tactical_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  ipfs:
+    image: ipfs/kubo:v0.28.0
+    container_name: ibvap-ipfs
+    restart: unless-stopped
+    environment:
+      IPFS_PATH: /data/ipfs
+    volumes:
+      - ipfs_data:/data/ipfs
+    ports:
+      - "127.0.0.1:5001:5001"
+      - "127.0.0.1:8080:8080"
+    networks:
+      - ibvap-tactical-net
+
+  central-gateway:
+    build:
+      context: ../..
+      dockerfile: deploy/docker/Dockerfile.gateway
+    container_name: ibvap-gateway
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      IBVAP_ENV: ${IBVAP_ENV:-production}
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-ibvap_admin}:${POSTGRES_PASSWORD:-ibvap_secure_defense_pass_2024}@postgres:5432/${POSTGRES_DB:-ibvap_tactical_db}
+      IPFS_API_URL: http://ipfs:5001
+      EDGE_API_TOKEN: ${EDGE_API_TOKEN:-REDACTED_HISTORICAL_SECRET}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000}
+    ports:
+      - "8000:8000"
+    networks:
+      - ibvap-tactical-net
+
+  web-dashboard:
+    build:
+      context: ../..
+      dockerfile: deploy/docker/Dockerfile.web
+      args:
+        NEXT_PUBLIC_GATEWAY_URL: ${NEXT_PUBLIC_GATEWAY_URL:-http://localhost:8000}
+        NEXT_PUBLIC_WS_URL: ${NEXT_PUBLIC_WS_URL:-ws://localhost:8000/ws/v1/c2}
+    container_name: ibvap-dashboard
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    networks:
+      - ibvap-tactical-net
+
+networks:
+  ibvap-tactical-net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  ipfs_data:
