@@ -109,7 +109,14 @@ class WebSocketEventHub:
         Uses constant-time comparison (secrets.compare_digest) to prevent timing side-channels.
         Closes socket with policy violation (1008) if unauthenticated.
         """
-        expected_token = os.getenv("EDGE_API_TOKEN", "REDACTED_HISTORICAL_SECRET")
+        expected_token = os.getenv("EDGE_API_TOKEN")
+        if not expected_token:
+            logger.error("EDGE_API_TOKEN environment variable is not configured. Rejecting edge connection.")
+            try:
+                await websocket.close(code=1008, reason="Authentication failed: server EDGE_API_TOKEN is not configured")
+            except Exception:
+                pass
+            return False
 
         # Extract token from query params or headers
         presented_token = token

@@ -8,7 +8,7 @@ services:
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-ibvap_tactical_db}
       POSTGRES_USER: ${POSTGRES_USER:-ibvap_admin}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ibvap_secure_defense_pass_2024}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -46,9 +46,9 @@ services:
         condition: service_healthy
     environment:
       IBVAP_ENV: ${IBVAP_ENV:-production}
-      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-ibvap_admin}:${POSTGRES_PASSWORD:-ibvap_secure_defense_pass_2024}@postgres:5432/${POSTGRES_DB:-ibvap_tactical_db}
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-ibvap_admin}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-ibvap_tactical_db}
       IPFS_API_URL: http://ipfs:5001
-      EDGE_API_TOKEN: ${EDGE_API_TOKEN:-REDACTED_HISTORICAL_SECRET}
+      EDGE_API_TOKEN: ${EDGE_API_TOKEN}
       CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000}
     ports:
       - "8000:8000"

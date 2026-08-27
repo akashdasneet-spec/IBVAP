@@ -9,7 +9,7 @@
       "task": "Object Detection & Tracking",
       "classes": ["Person", "Vehicle", "Weapon", "Abandoned Package"],
       "format": "ONNX / TensorRT FP16",
-      "sha256_hash": "REDACTED_HISTORICAL_KEY_OR_HASH",
+      "sha256_hash": "c5a71e6216a9a8be177b91d293d052a23e595304400a4fb9bf263901b0f19c83",
       "license": "Proprietary Defense License",
       "benchmark": {
         "latency_ms_tensorrt": 4.2,

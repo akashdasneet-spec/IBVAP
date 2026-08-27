@@ -58,7 +58,7 @@ async def test_audit_verification_endpoint():
         # 2. Ingest Merkle Batch Receipt that includes this leaf
         receipt_payload = {
             "batch_id": f"BATCH-{uuid4().hex[:6]}",
-            "root_hash": "REDACTED_HISTORICAL_KEY_OR_HASH",
+            "root_hash": "a" * 64,
             "leaf_count": 1,
             "leaves": [expected_leaf],
             "timestamp_start": now.isoformat(),

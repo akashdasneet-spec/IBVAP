@@ -11,7 +11,7 @@ services:
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-ibvap_tactical_db}
       POSTGRES_USER: ${POSTGRES_USER:-ibvap_admin}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-REDACTED_HISTORICAL_SECRET}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "127.0.0.1:5432:5432"
     volumes:
@@ -59,10 +59,10 @@ services:
       ipfs:
         condition: service_started
     environment:
-      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-ibvap_admin}:${POSTGRES_PASSWORD:-REDACTED_HISTORICAL_SECRET}@postgres:5432/${POSTGRES_DB:-ibvap_tactical_db}
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-ibvap_admin}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-ibvap_tactical_db}
       TAK_SERVER_URL: ${TAK_SERVER_URL:-udp://239.2.3.1:6969}
       IPFS_API_URL: http://ipfs:5001/api/v0
-      EDGE_API_TOKEN: ${EDGE_API_TOKEN:-REDACTED_HISTORICAL_SECRET}
+      EDGE_API_TOKEN: ${EDGE_API_TOKEN}
     ports:
       - "8000:8000"
     networks:
@@ -85,8 +85,8 @@ services:
       SENSOR_ID: a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d
       BOP_SECTOR_ID: BOP-SECTOR-ALPHA-01
       RTSP_URL: videotestsrc
-      EDGE_API_TOKEN: ${EDGE_API_TOKEN:-REDACTED_HISTORICAL_SECRET}
-      EVIDENCE_MASTER_KEY: ${EVIDENCE_MASTER_KEY:-REDACTED_HISTORICAL_KEY_OR_HASH}
+      EDGE_API_TOKEN: ${EDGE_API_TOKEN}
+      EVIDENCE_MASTER_KEY: ${EVIDENCE_MASTER_KEY}
     networks:
       - ibvap-tactical-net
     deploy:
