@@ -14,7 +14,7 @@ from main import app, ws_hub
 
 
 def test_websocket_event_hub_operator_broadcast(monkeypatch):
-    monkeypatch.setenv("EDGE_API_TOKEN", "REDACTED_TEST_TOKEN")
+    monkeypatch.setenv("EDGE_API_TOKEN", "TEST_EDGE_TOKEN_ONLY")
     client = TestClient(app)
 
     # 1. Connect Operator WebSocket
@@ -22,7 +22,7 @@ def test_websocket_event_hub_operator_broadcast(monkeypatch):
         assert len(ws_hub.c2_operators) >= 1
 
         # 2. Connect Edge Node WebSocket with valid token
-        with client.websocket_connect("/ws/v1/edge?node_id=EDGE-TEST-01&token=REDACTED_TEST_TOKEN") as edge_ws:
+        with client.websocket_connect("/ws/v1/edge?node_id=EDGE-TEST-01&token=TEST_EDGE_TOKEN_ONLY") as edge_ws:
             alert_id = str(uuid4())
             sensor_id = str(uuid4())
             now_iso = datetime.now(timezone.utc).isoformat()
@@ -72,3 +72,4 @@ def test_edge_websocket_rejects_invalid_token(monkeypatch):
     with pytest.raises(Exception):
         with client.websocket_connect("/ws/v1/edge?node_id=HACKER-EDGE&token=WrongToken"):
             pass
+
